@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 function HomePage() {
   const [studentId, setStudentId] = useState('');
@@ -20,6 +21,7 @@ function HomePage() {
     try {
       const response = await axios.get(`http://localhost:5000//api/subjects?student_id=${studentId}`);
       setSubjects(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching subjects:', error);
     }
@@ -55,6 +57,7 @@ function HomePage() {
 
   return (
     <div>
+       <Header /> 
       <h2>Welcome to Quiz Wizards!</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="studentId">Enter Student ID:</label>

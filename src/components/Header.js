@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom';
 
 function Header() {
   return (
-    <header>
-      <h1>Quiz Wizards</h1>
+    <header className="header-band">
+      <h1>QUIZ WIZARDS</h1>
       <nav>
         <ul>
-          <li><Link to="/">Home</Link></li>
-          {/* Add additional navigation links here */}
+          <li className="dropdown">
+            <span className="dropbtn">Navigate</span>
+              <Link to="/">Home</Link>
+              <Link to="/adminpanel">Admin Panel</Link>
+          </li>
         </ul>
       </nav>
     </header>

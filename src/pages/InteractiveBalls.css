@@ -1,0 +1,83 @@
+.app {
+    text-align: center;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  .color-balls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .color-ball {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+  }
+  
+  .black {
+    background-color: black;
+  }
+  
+  .white {
+    background-color: white;
+  }
+  
+  .violet {
+    background-color: violet;
+  }
+  
+  .orange {
+    background-color: orange;
+  }
+  
+  .blue {
+    background-color: blue;
+  }
+  
+  .green {
+    background-color: green;
+  }
+  
+  .yellow {
+    background-color: yellow;
+  }
+  
+  .red {
+    background-color: red;
+  }
+  
+  .darkblue {
+    background-color: darkblue;
+  }
+  
+  .darkgreen {
+    background-color: darkgreen;
+  }
+  
+  .pink {
+    background-color: pink;
+  }
+  
+  .brown {
+    background-color: brown;
+  }
+  
+  .drop-box {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    border: 2px dashed black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    position: relative;
+  }
+  

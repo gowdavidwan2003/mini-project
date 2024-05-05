@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import * as handpose from '@tensorflow-models/handpose';
 import '@tensorflow/tfjs';
 import Webcam from 'react-webcam';
+import Header from '../components/Header';
 
 function QuizPage() {
   const { studentId, subjectId, level } = useParams();
@@ -41,8 +42,12 @@ function QuizPage() {
   }, []);
 
   useEffect(() => {
-    // Automatically select option after 3 seconds if hand is on the quadrant
     if (handQuadrant !== null) {
+      // Clear any existing timeout
+      if (autoSelectTimeout) {
+        clearTimeout(autoSelectTimeout);
+      }
+      // Set a new timeout
       const timeoutId = setTimeout(() => {
         handleOptionSelect(handQuadrant);
       }, 3000);
@@ -59,9 +64,9 @@ function QuizPage() {
       const video = webcamRef.current.video;
       const hand = await net.estimateHands(video);
       if (hand.length > 0) {
-        const landmarks = hand[0].landmarks;
-        const x = landmarks[0][0];
-        const y = landmarks[0][1];
+        const palmBase = hand[0].landmarks[0]; // Palm base is the first landmark
+        const x = palmBase[0];
+        const y = palmBase[1];
         const quadrant = determineQuadrant(x, y, video.width, video.height);
         setHandQuadrant(quadrant);
       }
@@ -69,14 +74,13 @@ function QuizPage() {
   };
 
   const determineQuadrant = (x, y, videoWidth, videoHeight) => {
-    // Determine the quadrant based on the position of the hand
     const quadrantWidth = videoWidth / 2;
     const quadrantHeight = videoHeight / 2;
-    if (x < quadrantWidth && y < quadrantHeight) {
+    if (x <= quadrantWidth && y <= quadrantHeight) {
       return 1;
-    } else if (x >= quadrantWidth && y < quadrantHeight) {
+    } else if (x > quadrantWidth && y <= quadrantHeight) {
       return 2;
-    } else if (x < quadrantWidth && y >= quadrantHeight) {
+    } else if (x <= quadrantWidth && y > quadrantHeight) {
       return 3;
     } else {
       return 4;
@@ -84,21 +88,16 @@ function QuizPage() {
   };
 
   const handleOptionSelect = (option) => {
-    // Clear auto-select timeout
-    clearTimeout(autoSelectTimeout);
-    // Update selected option
     setSelectedOption(option);
-    // Move to next question
+    console.log(`Selected option: ${option}`);
     handleNextQuestion();
   };
 
   const handleNextQuestion = () => {
-    // Check if questions array is empty or current question index is out of bounds
     if (questions.length === 0 || currentQuestionIndex >= questions.length) {
       return;
     }
 
-    // Map correct_option character to index
     const correctOptionIndex = {
       'a': 0,
       'b': 1,
@@ -106,18 +105,14 @@ function QuizPage() {
       'd': 3
     }[questions[currentQuestionIndex].correct_option.toLowerCase()];
 
-    // Check if selected option is correct
-    if (selectedOption === questions[currentQuestionIndex].options[correctOptionIndex]) {
-      // Update score using the functional form of setScore
+    if (selectedOption === correctOptionIndex) {
       setScore(prevScore => prevScore + 1);
     }
-    // Print score to console
-    console.log('Score:', score);
-    // Move to the next question
+
     setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setHandQuadrant(null); // Reset hand quadrant
+    setHandQuadrant(null);
     setSelectedOption('');
-    // Check if quiz is completed
+
     if (currentQuestionIndex === questions.length - 1) {
       setQuizCompleted(true);
     }
@@ -125,6 +120,7 @@ function QuizPage() {
 
   return (
     <div>
+       <Header /> 
       <h2>Quiz Page</h2>
       <div>
         <Webcam
@@ -143,7 +139,6 @@ function QuizPage() {
           <div>
             <h3>Quiz Completed!</h3>
             <p>Your Score: {score}</p>
-            {/* Add logic to submit score to the test table */}
           </div>
         ) : (
           <div>
@@ -152,7 +147,7 @@ function QuizPage() {
             <ul>
               {questions[currentQuestionIndex]?.options.map((option, index) => (
                 <li key={index}>
-                  <button onClick={() => handleOptionSelect(option)}>{option}</button>
+                  <button onClick={() => handleOptionSelect(index)}>{option}</button>
                 </li>
               ))}
             </ul>
