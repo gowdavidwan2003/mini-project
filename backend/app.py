@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psycopg2
 from psycopg2 import Error
+from statistics import mean, median
 
 app = Flask(__name__)
 CORS(app)
@@ -237,6 +238,102 @@ def delete_question(question_id):
                 connection.close()
     return jsonify({"error": "Failed to connect to database"}), 500
 
+@app.route('/api/add_score', methods=['POST'])
+def add_score():
+    data = request.json
+    student_id = data.get('student_id')
+    subject_id = data.get('subject_id')
+    score = data.get('score')
+    connection = connect_to_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Query to insert a new question into the database
+            query = """
+                insert into test(student_id,subject_id,score) values(%s, %s, %s)
+            """
+            cursor.execute(query, (student_id,subject_id,score))
+            connection.commit()
+            return 'Score added successfully'
+        except Error as e:
+            print("Error executing SQL query:", e)
+            return jsonify({"error": "Failed to add score"}), 500
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+    return jsonify({"error": "Failed to connect to database"}), 500
+
+
+@app.route('/api/student_report/<student_id>', methods=['GET'])
+def get_student_report(student_id):
+    connection = connect_to_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Query to insert a new question into the database
+            query = """
+                select * from test t1 join subject s on t1.subject_id=s.subject_id where student_id = %s
+            """
+            cursor.execute(query, (student_id,))
+            connection.commit()
+            report = [{
+                "student_id": row[0],
+                "subject_id": row[6],
+                "score": row[2],
+                "date": row[3],
+                "test_id": row[4]
+            } for row in cursor.fetchall()]
+            return jsonify(report)
+        except Error as e:
+            print("Error executing SQL query:", e)
+            return jsonify({"error": "Failed to get student report"}), 500
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+    return jsonify({"error": "Failed to connect to database"}), 500
+
+@app.route('/api/subject_report/<subject_id>', methods=['GET'])
+def get_subject_report(subject_id):
+    connection = connect_to_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Query to retrieve test scores for the given subject
+            query = """
+                SELECT * FROM test WHERE subject_id = %s
+            """
+            cursor.execute(query, (subject_id,))
+            scores = [row[2] for row in cursor.fetchall()]
+            sid = [row[0] for row in cursor.fetchall()]
+            if scores:
+                max_score = max(scores)
+                min_score = min(scores)
+                avg_score = mean(scores)
+                median_score = median(scores)
+                num_students = len(scores)
+                subject_report = {
+                    "subject_id": subject_id,
+                    "max_score": max_score,
+                    "min_score": min_score,
+                    "avg_score": avg_score,
+                    "median_score": median_score,
+                    "num_students": num_students,
+                    "sid_count" :sid
+                }
+
+                return jsonify(subject_report)
+            else:
+                return jsonify({"error": "No test scores available for this subject"}), 404
+        except Error as e:
+            print("Error executing SQL query:", e)
+            return jsonify({"error": "Failed to get subject report"}), 500
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+    return jsonify({"error": "Failed to connect to database"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

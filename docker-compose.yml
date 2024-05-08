@@ -1,21 +1,45 @@
 version: '3'
-
 services:
-  flask-api:
-    build: ./backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     depends_on:
-      - postgres-db
-
-  postgres-db:
-    image: postgres
+      - database
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Vidwan
-      POSTGRES_DB: mini-project
+      - POSTGRES_USER =postgres
+      - POSTGRES_PASSWORD=Vidwan
+      - POSTGRES_DB=mini-project
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
 
   frontend:
-    build: .  
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_ADD_STUDENT_URL= http://flask-backend:5000/api/add_student
+      - REACT_APP_DELETE_STUDENT_URL= http://flask-backend:5000/api/delete_student/${deletedStudentId}
+      - REACT_APP_ADD_QUESTION_URL=http://flask-backend:5000/api/add_question
+      - REACT_APP_DELETE_QUESTION_URL=http://flask-backend:5000/api/delete_question/${deletedQuestionId}
+      - REACT_APP_STUDENT_REPORT_URL=http://flask-backend:5000/api/student_report/${studentId}
+      - REACT_APP_SUBJECT_REPORT_URL = http://flask-backend:5000/api/subject_report/${subjectId}
+      - REACT_APP_GET_STUDENT_URL=http://flask-backend:5000/api/student/${studentId}
+      - REACT_APP_GET_SUBJECT_URL= http://flask-backend:5000/api/subjects?student_id=${studentId}
+      - REACT_APP_Fetch_STUDENT_DETAILS_URL= http://flask-backend:5000/api/student/${studentId}
+      - REACT_APP_Fetch_QUESTIONS = http://flask-backend:5000/api/questions?subject_id=${subjectId}&level=${level}
+      - REACT_APP_SCORE= http://flask-backend:5000/api/add_score
+      # Add environment variables for React app configuration (e.g., backend API URL)
+
+  database:
+    image: postgres
+    environment:
+      POSTGRES_DB: mini-project
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Vidwan
