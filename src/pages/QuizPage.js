@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import * as handpose from '@tensorflow-models/handpose';
-import '@tensorflow/tfjs';
-import Webcam from 'react-webcam';
 import Header from '../components/Header';
 
 function QuizPage() {
@@ -13,9 +10,6 @@ function QuizPage() {
   const [selectedOption, setSelectedOption] = useState('');
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [handQuadrant, setHandQuadrant] = useState(null);
-  const [autoSelectTimeout, setAutoSelectTimeout] = useState(null);
-  const webcamRef = useRef(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -31,129 +25,99 @@ function QuizPage() {
     }
   }, [subjectId, level]);
 
-  useEffect(() => {
-    const runHandpose = async () => {
-      const net = await handpose.load();
-      setInterval(() => {
-        detectHand(net);
-      }, 100);
-    };
-    runHandpose();
-  }, []);
+  // useEffect(() => {
+  //   // Automatically click the "Open Camera" button when a new question is displayed
+  //   const button = document.getElementById('openCameraButton');
+  //   if (button) {
+  //     button.click();
+  //   }
+  // }, [currentQuestionIndex]);
 
-  useEffect(() => {
-    if (handQuadrant !== null) {
-      // Clear any existing timeout
-      if (autoSelectTimeout) {
-        clearTimeout(autoSelectTimeout);
-      }
-      // Set a new timeout
-      const timeoutId = setTimeout(() => {
-        handleOptionSelect(handQuadrant);
-      }, 3000);
-      setAutoSelectTimeout(timeoutId);
+  const handleOptionSelect = async (optionIndex) => {
+    const response = await axios.post('http://localhost:5000/api/select_option', {
+        option_index: optionIndex
+      });
+    console.log(response.data.option_index)
+    // setSelectedOption(optionIndex);
+    optionIndex = response.data.option_index
+    setSelectedOption(response.data.option_index);
+    const correctOption = questions[currentQuestionIndex].correct_option;
+    if (correctOption === String.fromCharCode(97 + optionIndex)) {
+      setScore(score + 1);
     }
-  }, [handQuadrant]);
-
-  const detectHand = async (net) => {
-    if (
-      typeof webcamRef.current !== 'undefined' &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      const video = webcamRef.current.video;
-      const hand = await net.estimateHands(video);
-      if (hand.length > 0) {
-        const palmBase = hand[0].landmarks[0]; // Palm base is the first landmark
-        const x = palmBase[0];
-        const y = palmBase[1];
-        const quadrant = determineQuadrant(x, y, video.width, video.height);
-        setHandQuadrant(quadrant);
-      }
-    }
-  };
-
-  const determineQuadrant = (x, y, videoWidth, videoHeight) => {
-    const quadrantWidth = videoWidth / 2;
-    const quadrantHeight = videoHeight / 2;
-    if (x <= quadrantWidth && y <= quadrantHeight) {
-      return 1;
-    } else if (x > quadrantWidth && y <= quadrantHeight) {
-      return 2;
-    } else if (x <= quadrantWidth && y > quadrantHeight) {
-      return 3;
-    } else {
-      return 4;
-    }
-  };
-
-  const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-    console.log(`Selected option: ${option}`);
     handleNextQuestion();
   };
 
   const handleNextQuestion = () => {
-    if (questions.length === 0 || currentQuestionIndex >= questions.length) {
-      return;
-    }
-
-    const correctOptionIndex = {
-      'a': 0,
-      'b': 1,
-      'c': 2,
-      'd': 3
-    }[questions[currentQuestionIndex].correct_option.toLowerCase()];
-
-    if (selectedOption === correctOptionIndex) {
-      setScore(prevScore => prevScore + 1);
-    }
-
     setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setHandQuadrant(null);
     setSelectedOption('');
-
     if (currentQuestionIndex === questions.length - 1) {
       setQuizCompleted(true);
     }
   };
 
+  const submitTest = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/add_score', {
+        student_id: studentId,
+        subject_id: subjectId,
+        score: score
+      });
+      console.log('Test submitted successfully');
+    } catch (error) {
+      console.error('Error submitting test:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (quizCompleted) {
+      submitTest();
+    }
+  }, [quizCompleted]);
+
+
   return (
     <div>
-       <Header /> 
-      <h2>Quiz Page</h2>
-      <div>
-        <Webcam
-          ref={webcamRef}
-          mirrored
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            zIndex: 9,
-            width: '100%',
-            height: '100%'
-          }}
-        />
-        {quizCompleted ? (
-          <div>
-            <h3>Quiz Completed!</h3>
-            <p>Your Score: {score}</p>
+      <Header />
+    <div className="container mx-auto px-4 py-8">
+      
+      <h2 className="text-3xl font-semibold mb-6 text-center">Quiz Page</h2>
+      <div className="flex justify-center">
+        <div className="w-full md:w-2/3 lg:w-1/2">
+        <p className="text-lg mb-4">Score: {score}</p>
+          <div className="bg-white shadow-md rounded-md p-6">
+            <div>
+              
+            </div>
+            {quizCompleted ? (
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Quiz Completed!</h3>
+                <p className="text-lg mb-4">Your Score: {score}</p>
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Question {currentQuestionIndex + 1}</h3>
+                <p className="text-lg mb-4">{questions[currentQuestionIndex]?.question}</p>
+                <ul className="mb-4">
+                  {questions[currentQuestionIndex]?.options.map((option, index) => (
+                    <li key={index}>
+                     
+                     Option {String.fromCharCode(65 + index)}.   {option}
+                      
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <h3>Question {currentQuestionIndex + 1}</h3>
-            <p>{questions[currentQuestionIndex]?.question}</p>
-            <ul>
-              {questions[currentQuestionIndex]?.options.map((option, index) => (
-                <li key={index}>
-                  <button onClick={() => handleOptionSelect(index)}>{option}</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          <button id="openCameraButton"
+               onClick={() => handleOptionSelect(0)}
+               className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md ${selectedOption === 0 ? 'bg-blue-600' : ''}`}
+             >Open Camera
+              </button>
+        </div>
       </div>
+    </div>
     </div>
   );
 }
