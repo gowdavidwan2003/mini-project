@@ -64,7 +64,7 @@ function Quiz() {
       <form onSubmit={handleSubmit} className="text-center">
         <label htmlFor="studentId" className="block mb-4">Enter Student ID:</label>
         <input
-          type="text"
+          type="number"
           id="studentId"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}

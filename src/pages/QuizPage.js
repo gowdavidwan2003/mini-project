@@ -25,8 +25,22 @@ function QuizPage() {
     }
   }, [subjectId, level]);
 
-  const handleOptionSelect = (optionIndex) => {
-    setSelectedOption(optionIndex);
+  // useEffect(() => {
+  //   // Automatically click the "Open Camera" button when a new question is displayed
+  //   const button = document.getElementById('openCameraButton');
+  //   if (button) {
+  //     button.click();
+  //   }
+  // }, [currentQuestionIndex]);
+
+  const handleOptionSelect = async (optionIndex) => {
+    const response = await axios.post('http://localhost:5000/api/select_option', {
+        option_index: optionIndex
+      });
+    console.log(response.data.option_index)
+    // setSelectedOption(optionIndex);
+    optionIndex = response.data.option_index
+    setSelectedOption(response.data.option_index);
     const correctOption = questions[currentQuestionIndex].correct_option;
     if (correctOption === String.fromCharCode(97 + optionIndex)) {
       setScore(score + 1);
@@ -61,6 +75,7 @@ function QuizPage() {
     }
   }, [quizCompleted]);
 
+
   return (
     <div>
       <Header />
@@ -86,18 +101,20 @@ function QuizPage() {
                 <ul className="mb-4">
                   {questions[currentQuestionIndex]?.options.map((option, index) => (
                     <li key={index}>
-                      <button
-                        onClick={() => handleOptionSelect(index)}
-                        className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md ${selectedOption === index ? 'bg-blue-600' : ''}`}
-                      >
-                        {option}
-                      </button>
+                     
+                     Option {String.fromCharCode(65 + index)}.   {option}
+                      
                     </li>
                   ))}
                 </ul>
               </div>
             )}
           </div>
+          <button id="openCameraButton"
+               onClick={() => handleOptionSelect(0)}
+               className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md ${selectedOption === 0 ? 'bg-blue-600' : ''}`}
+             >Open Camera
+              </button>
         </div>
       </div>
     </div>

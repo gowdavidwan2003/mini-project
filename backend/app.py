@@ -4,6 +4,11 @@ from flask_cors import CORS
 import psycopg2
 from psycopg2 import Error
 from statistics import mean, median
+import cv2
+import mediapipe as mp
+import time
+
+
 
 app = Flask(__name__)
 CORS(app)
@@ -116,17 +121,7 @@ def get_questions():
     return jsonify([]), 404  # Return 404 if no questions found for the subject
 
 
-@app.route('/api/submit_answers', methods=['POST'])
-def submit_answers():
-    data = request.json
-    question_id = data.get('question_id')
-    selected_options = data.get('selected_options')
 
-    # Here you can implement the logic to determine the score
-    # For demonstration purposes, let's just print the submitted data
-    print(f"Question ID: {question_id}, Selected Options: {selected_options}")
-
-    return 'Answers submitted successfully'
 
 @app.route('/api/add_student', methods=['POST'])
 def add_student():
@@ -334,6 +329,62 @@ def get_subject_report(subject_id):
                 cursor.close()
                 connection.close()
     return jsonify({"error": "Failed to connect to database"}), 500
+
+
+# Camera option
+@app.route('/api/select_option', methods=['POST'])
+def select_option():
+    mp_hands = mp.solutions.hands
+    hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1, min_detection_confidence=0.5)
+    mp_drawing = mp.solutions.drawing_utils
+    cap = cv2.VideoCapture(0)
+    cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty("Frame", cv2.WND_PROP_TOPMOST, 1)
+    last_quadrant = None
+    start_time = None
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            continue
+
+        frame = cv2.flip(frame, 1)
+        height, width, _ = frame.shape
+        cv2.line(frame, (width//2, 0), (width//2, height), (255, 0, 0), 2)
+        cv2.line(frame, (0, height//2), (width, height//2), (255, 0, 0), 2)
+        cv2.putText(frame, "A", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, "B", (width//2 + 50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, "C", (50, height//2 + 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, "D", (width//2 + 50, height//2 + 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+
+        results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+
+                cx, cy = int(hand_landmarks.landmark[0].x * width), int(hand_landmarks.landmark[0].y * height)
+
+                quadrant = 0 if cx < width//2 and cy < height//2 else 1 if cx > width//2 and cy < height//2 else 2 if cx < width//2 and cy > height//2 else 3
+
+                if quadrant == last_quadrant:
+                    if time.time() - start_time > 3:
+                        selected_ans = quadrant
+                        start_time = time.time()
+                        cap.release()
+                        cv2.destroyAllWindows()
+                else:
+                    last_quadrant = quadrant
+                    start_time = time.time()
+
+        cv2.imshow('Frame', frame)
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+    print('option_index', quadrant)
+    return jsonify({'option_index': quadrant})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
