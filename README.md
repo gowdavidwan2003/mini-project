@@ -150,10 +150,6 @@ A: The accuracy of the gesture recognition system may vary depending on factors 
 
 ---
 
-Certainly! Here's the updated Maintainers section with GitHub links:
-
----
-
 # Maintainers
 
 - Vidwan Gowda H M - [@gowdavidwan2003](https://github.com/gowdavidwan2003)
