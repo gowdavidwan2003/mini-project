@@ -340,6 +340,10 @@ def select_option():
     cap = cv2.VideoCapture(0)
     cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
     cv2.setWindowProperty("Frame", cv2.WND_PROP_TOPMOST, 1)
+
+    # Set the window position (x, y)
+    cv2.moveWindow("Frame", 100, 100)
+    
     last_quadrant = None
     start_time = None
 
