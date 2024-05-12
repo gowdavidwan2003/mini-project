@@ -1,13 +1,13 @@
 # Technologies Used
 
 ## Backend
-- **Python**: Used for backend development.
-- **PostgreSQL (pgsql)**: Utilized as the relational database management system.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" height="30px"> **Python**: Used for backend development.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" alt="PostgreSQL" height="30px"> **PostgreSQL (pgsql)**: Utilized as the relational database management system.
 
 ## Frontend
-- **JavaScript**: Utilized for frontend development.
-- **npm**: Used for managing project dependencies.
-- **Tailwind CSS**: Utilized for styling and design of the frontend.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" height="30px"> **React**: Utilized for frontend development.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="npm" height="30px"> **npm**: Used for managing project dependencies.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Tailwind_CSS_logo.svg" alt="Tailwind CSS" height="30px"> **Tailwind CSS**: Utilized for styling and design of the frontend.
 
 ---
 
