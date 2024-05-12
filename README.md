@@ -159,10 +159,6 @@ A: The accuracy of the gesture recognition system may vary depending on factors 
   
 ---
 
-Certainly! Here's the revised Contributing Guidelines section:
-
----
-
 # Contributing Guidelines
 
 Thank you for considering contributing to Quiz Wizards! Please review the contributing guidelines before making any contributions.
