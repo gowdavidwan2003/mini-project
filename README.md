@@ -1,3 +1,36 @@
+# Quiz Wizards
+
+## Introduction
+
+Welcome to Quiz Wizards, an interactive learning platform designed to engage children in a fun and innovative way. Unlike conventional quiz platforms, Quiz Wizards leverages the power of computer vision technology to provide an immersive learning experience.
+
+## Project Overview
+
+Quiz Wizards aims to revolutionize the way children learn by incorporating real-time interaction using a camera-based system. Instead of traditional multiple-choice options, Quiz Wizards utilizes hand gestures captured by the camera to select answers dynamically.
+
+For example, if your hand is positioned in the first quadrant, the corresponding option assigned to that quadrant will be selected. This unique approach not only makes learning more engaging but also encourages physical activity and cognitive development.
+
+## Key Features
+
+- **Interactive Learning**: Engage with quizzes using hand gestures captured by the camera.
+- **Real-time Feedback**: Receive instant feedback based on gesture recognition.
+- **Gamified Experience**: Turn learning into an enjoyable game-like experience.
+- **Customizable Content**: Create and customize quizzes to suit individual learning needs.
+- **Accessible**: Easily accessible from any device with a camera and internet connection.
+
+## How It Works
+
+1. **Set Up Your Camera**: Ensure your device has a camera and is properly positioned.
+2. **Select a Quiz**: Choose from a variety of quizzes available on Quiz Wizards.
+3. **Start Gesturing**: Use your hand gestures to select answers as prompted by the quiz interface.
+4. **Receive Feedback**: Get immediate feedback on your selections and track your progress.
+
+## Get Started
+
+Ready to embark on an exciting learning adventure? Visit Quiz Wizards and start exploring the world of interactive learning today!
+
+---
+
 # Technologies Used
 
 ## Backend
@@ -92,6 +125,70 @@ Before proceeding with the setup, ensure that you have the following prerequisit
 
 Once the backend and frontend are running, you can access the application by opening a web browser and navigating to `http://localhost:3000`.
 
-## Troubleshooting
+---
 
-- If you encounter any issues during the setup process, please refer to the project documentation or seek assistance from the project maintainers.
+# Troubleshooting & FAQ
+
+## Common Issues and Solutions
+### 1. Camera Not Detected:
+
+If your camera is not detected, make sure it is properly connected and recognized by your device. You may need to check your device settings or try using a different camera.
+
+### 2. Gesture Recognition Errors: 
+
+If the system is not recognizing your hand gestures accurately, ensure that you are positioned properly in front of the camera and that there is adequate lighting in the room.
+
+## Frequently Asked Questions (FAQ)
+
+### Q: Are the quizzes customizable?
+
+A: Yes, Quiz Wizards allows for the creation and customization of quizzes to suit individual learning needs.
+
+### Q: How accurate is the gesture recognition system?
+
+A: The accuracy of the gesture recognition system may vary depending on factors such as lighting conditions and hand positioning, but efforts have been made to ensure reliable performance.
+
+---
+
+Certainly! Here's the updated Maintainers section with GitHub links:
+
+---
+
+# Maintainers
+
+- Vidwan Gowda H M - [@gowdavidwan2003](https://github.com/gowdavidwan2003)
+- Suhas R - [@suhas-0812](https://github.com/suhas-0812)
+- Varshith R - [@Varshithckm](https://github.com/Varshithckm)
+- Rakesh P - [@Rakesh9742](https://github.com/Rakesh9742)
+  
+---
+
+Certainly! Here's the revised Contributing Guidelines section:
+
+---
+
+# Contributing Guidelines
+
+Thank you for considering contributing to Quiz Wizards! Please review the contributing guidelines before making any contributions.
+
+To contribute, please follow these steps:
+
+1. Review the project's goals and guidelines.
+2. Fork the repository to your GitHub account.
+3. Make your desired changes or additions in your forked repository.
+4. Create a pull request to the main repository, detailing the changes you've made and why they are beneficial.
+5. Email gowdavidwan2003@gmail.com regarding collaboration. Contributions without prior permission may not be merged into the main branch.
+
+Thank you for your interest in improving Quiz Wizards!
+
+--- 
+
+# License Information
+
+Quiz Wizards is proprietary software.
+
+This software is not open-source and cannot be freely distributed or modified by others. Usage, copying, modification, distribution, sublicensing, or selling of this software by any entity other than the licence holders is strictly prohibited.
+
+For licensing inquiries or further information, please contact gowdavidwan2003@gmail.com.
+
+--- 
