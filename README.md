@@ -1,4 +1,13 @@
-Certainly! Here's a draft for your README.md file:
+# Technologies Used
+
+## Backend
+- **Python**: Used for backend development.
+- **PostgreSQL (pgsql)**: Utilized as the relational database management system.
+
+## Frontend
+- **JavaScript**: Utilized for frontend development.
+- **npm**: Used for managing project dependencies.
+- **Tailwind CSS**: Utilized for styling and design of the frontend.
 
 ---
 
