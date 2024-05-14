@@ -28,7 +28,8 @@ function AdminPanel() {
   const [classId, setClassId] = useState('');
   const [className, setClassName] = useState('');
   const [subjectName, setSubjectName] = useState('');
-
+  const [chart, setChart] = useState(null); // Define chart state variable
+  const [statistics, setStatistics] = useState(null); 
  
 
   const handleLogin = () => {
@@ -124,14 +125,16 @@ function AdminPanel() {
   const fetchStudentReport = () => {
     axios.get(`http://localhost:5000/api/student_report/${studentId}`)
       .then(response => {
-        setStudentReport(response.data);
+        const { statistics, chart } = response.data;
+        setStudentReport(statistics); // Set student report statistics
+        setChart(chart); // Set chart data
       })
       .catch(error => {
         console.error('Error fetching student report:', error);
         alert('Failed to fetch student report. Please try again.');
       });
   };
-
+  
   const fetchStudentDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/student/${studentId}`);
@@ -185,6 +188,7 @@ function AdminPanel() {
       alert('Failed to add subject. Please try again.');
     });
   };
+  
   
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -290,19 +294,50 @@ function AdminPanel() {
           <ul>
             {studentReport.map((result, index) => (
               <li key={index} className="mb-2">
-                <p>Subject : {result.subject_id}</p>
-                <p>Score: {result.score}</p>
-                <p>Date: {result.date}</p>
+                <p>Subject : {result.subject_name}</p>
+                <p>Maximum Score: {result.max_score}</p>
+                <p>Minimum score : {result.min_score}</p>
+                <p>Average score : {result.avg_score}</p>
+                <p>Median score : {result.median_score}</p>
+                <p>Number of Attempts : {result.num_attempts}</p>
               </li>
             ))}
           </ul>
         ) : (
           <p>No test results available for this student.</p>
         )}
+
+        {/* Display statistics */}
+        {statistics && (
+          <div>
+            <h3 className="text-lg mt-4 mb-2">Statistics</h3>
+            <ul>
+              {statistics.map((stat, index) => (
+                <li key={index}>
+                  <p>Subject: {stat.subject_name}</p>
+                  <p>Maximum Score: {stat.max_score}</p>
+                  <p>Minimum Score: {stat.min_score}</p>
+                  <p>Average Score: {stat.avg_score}</p>
+                  <p>Median Score: {stat.median_score}</p>
+                  <p>Number of Attempts: {stat.num_attempts}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Render chart */}
+        {chart && (
+          <div>
+            <h3 className="text-lg mt-4 mb-2">Chart</h3>
+            <img src={`data:image/png;base64,${chart}`} alt="Student Report Chart" />
+          </div>
+        )}
       </div>
     )}
   </div>
 )}
+
 {displayOption === 'SubjectReport' && (
   <div className="mt-8">
     <h2 className="text-xl mb-4">Subject Report</h2>
