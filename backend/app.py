@@ -102,6 +102,7 @@ def get_questions():
                 SELECT question_id, question, option_a, option_b, option_c, option_d, correct_option
                 FROM questions
                 WHERE subject_id = %s AND level = %s
+                ORDER BY RANDOM()
                 LIMIT 10;  -- Fetching only 10 questions
             """
             cursor.execute(query, (subject_id, level))
