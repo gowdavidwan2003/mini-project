@@ -101,7 +101,7 @@ def get_questions():
             query = """
                 SELECT question_id, question, option_a, option_b, option_c, option_d, correct_option
                 FROM questions
-                WHERE subject_id = %s AND level = %s
+                WHERE subject_id = %s AND level = %s ORDER BY RAND()
                 LIMIT 10;  -- Fetching only 10 questions
             """
             cursor.execute(query, (subject_id, level))
@@ -388,6 +388,63 @@ def select_option():
     cv2.destroyAllWindows()
     print('option_index', quadrant)
     return jsonify({'option_index': quadrant})
+
+
+@app.route('/api/add_class', methods=['POST'])
+def add_class():
+    data = request.json
+    class_id = data.get('class_id')
+    class_name = data.get('class_name')
+
+    connection = connect_to_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Query to insert a new class into the database
+            query = """
+                INSERT INTO class
+                VALUES (%s, %s)
+            """
+            cursor.execute(query, (class_id, class_name))
+            connection.commit()
+            return jsonify({"class_id": class_id})
+        except Error as e:
+            print("Error executing SQL query:", e)
+            return jsonify({"error": "Failed to add class"}), 500
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+    return jsonify({"error": "Failed to connect to database"}), 500
+
+
+@app.route('/api/add_subject', methods=['POST'])
+def add_subject():
+    data = request.json
+    subject_id = data.get('subject_id')
+    subject_name = data.get('subject_name')
+    class_id = data.get('class_id')
+
+    connection = connect_to_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Query to insert a new subject into the database
+            query = """
+                INSERT INTO subject
+                VALUES (%s, %s, %s)
+            """
+            cursor.execute(query, (subject_id, subject_name, class_id))
+            connection.commit()
+            return jsonify({"subject_id": subject_id})
+        except Error as e:
+            print("Error executing SQL query:", e)
+            return jsonify({"error": "Failed to add subject"}), 500
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+    return jsonify({"error": "Failed to connect to database"}), 500
 
 
 if __name__ == '__main__':

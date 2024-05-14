@@ -25,6 +25,9 @@ function AdminPanel() {
   const [studentDetails, setStudentDetails] = useState(null);
   const [subjectId, setSubjectId] = useState('');
   const [subjectReport, setSubjectReport] = useState(null);
+  const [classId, setClassId] = useState('');
+  const [className, setClassName] = useState('');
+  const [subjectName, setSubjectName] = useState('');
 
  
 
@@ -146,6 +149,42 @@ function AdminPanel() {
       console.error('Error fetching subject report:', error);
     }
   };
+
+  const handleAddClass = () => {
+    axios.post('http://localhost:5000/api/add_class', {
+      class_id: classId,
+      class_name: className
+    })
+    .then(response => {
+      console.log(response.data);
+      alert('Class added successfully');
+      setClassId('');
+      setClassName('');
+    })
+    .catch(error => {
+      console.error('Error adding class:', error);
+      alert('Failed to add class. Please try again.');
+    });
+  };
+
+  const handleAddSubject = () => {
+    axios.post('http://localhost:5000/api/add_subject', {
+      subject_id: subjectId,
+      subject_name: subjectName,
+      class_id: classId
+    })
+    .then(response => {
+      console.log(response.data);
+      alert('Subject added successfully');
+      setSubjectId('');
+      setSubjectName('');
+      setClassId('');
+    })
+    .catch(error => {
+      console.error('Error adding subject:', error);
+      alert('Failed to add subject. Please try again.');
+    });
+  };
   
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -164,6 +203,8 @@ function AdminPanel() {
               <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('DeleteQuestion')}>Delete Question</button>
               <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddStudent')}>Add Student</button>
               <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('DeleteStudent')}>Delete Student</button>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddClass')}>Add Class</button>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddSubject')}>Add Subject</button>
               <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md block mx-auto mt-4" onClick={() => setLoggedIn(false)}>Logout</button>
             </div>
           </div>
@@ -282,6 +323,28 @@ function AdminPanel() {
     )}
   </div>
 )}
+{displayOption === 'AddClass' && (
+            <div className="mt-8">
+              <h2 className="text-xl mb-4">Add Class</h2>
+              <div className="flex flex-wrap justify-center">
+                <input type="text" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                <input type="text" placeholder="Class Name" value={className} onChange={(e) => setClassName(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                <button onClick={handleAddClass} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Class</button>
+              </div>
+            </div>
+          )}
+          {/* Add Subject */}
+          {displayOption === 'AddSubject' && (
+            <div className="mt-8">
+              <h2 className="text-xl mb-4">Add Subject</h2>
+              <div className="flex flex-wrap justify-center">
+                <input type="text" placeholder="Subject ID" value={subjectId} onChange={(e) => setSubjectId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                <input type="text" placeholder="Subject Name" value={subjectName} onChange={(e) => setSubjectName(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                <input type="text" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                <button onClick={handleAddSubject} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Subject</button>
+              </div>
+            </div>
+          )}
 </div>
 
 
