@@ -75,6 +75,16 @@ function QuizPage() {
     }
   }, [quizCompleted]);
 
+  useEffect(() => {
+  // Automatically click the "Open Camera" button when a new question is displayed
+  if (currentQuestionIndex < questions.length) {
+    const button = document.getElementById('openCameraButton');
+    if (button) {
+      button.click();
+    }
+  }
+}, [currentQuestionIndex]);
+
 
   return (
     <div>
@@ -103,7 +113,7 @@ function QuizPage() {
                     <li key={index}>
                      
                      Option {String.fromCharCode(65 + index)}.   {option}
-                      
+
                     </li>
                   ))}
                 </ul>

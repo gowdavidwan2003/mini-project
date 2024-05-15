@@ -7,7 +7,11 @@ from statistics import mean, median
 import cv2
 import mediapipe as mp
 import time
-
+import matplotlib.pyplot as plt
+import io
+import base64
+import numpy as np
+import seaborn as sns
 
 
 app = Flask(__name__)
@@ -101,8 +105,7 @@ def get_questions():
             query = """
                 SELECT question_id, question, option_a, option_b, option_c, option_d, correct_option
                 FROM questions
-                WHERE subject_id = %s AND level = %s
-                ORDER BY RANDOM()
+                WHERE subject_id = %s AND level = %s ORDER BY RANDOM()
                 LIMIT 10;  -- Fetching only 10 questions
             """
             cursor.execute(query, (subject_id, level))
@@ -290,6 +293,81 @@ def get_student_report(student_id):
                 connection.close()
     return jsonify({"error": "Failed to connect to database"}), 500
 
+# @app.route('/api/student_report/<student_id>', methods=['GET'])
+# def get_student_report(student_id):
+#     connection = connect_to_db()
+#     if connection:
+#         try:
+#             cursor = connection.cursor()
+#             # Query to get student report from the database
+#             query = """
+#                 SELECT t1.subject_id, s.subject_name, t1.score 
+#                 FROM test t1 
+#                 JOIN subject s ON t1.subject_id = s.subject_id 
+#                 WHERE student_id = %s
+#             """
+#             cursor.execute(query, (student_id,))
+#             connection.commit()
+
+#             # Fetching student report
+#             report = [{
+#                 "subject_id": row[0],
+#                 "subject_name": row[1],
+#                 "score": row[2]
+#             } for row in cursor.fetchall()]
+
+#             # Group scores by subject
+#             subject_scores = {}
+#             for entry in report:
+#                 if entry['subject_id'] not in subject_scores:
+#                     subject_scores[entry['subject_id']] = {'subject_name': entry['subject_name'], 'scores': []}
+#                 subject_scores[entry['subject_id']]['scores'].append(entry['score'])
+
+#             # Calculate statistics for each subject
+#             subject_statistics = []
+#             for subject_id, data in subject_scores.items():
+#                 scores = data['scores']
+#                 max_score = np.max(scores)
+#                 min_score = np.min(scores)
+#                 avg_score = np.mean(scores)
+#                 median_score = np.median(scores)
+#                 num_attempts = len(scores)
+#                 subject_statistics.append({
+#                     'subject_name': data['subject_name'],
+#                     'max_score': max_score,
+#                     'min_score': min_score,
+#                     'avg_score': avg_score,
+#                     'median_score': median_score,
+#                     'num_attempts': num_attempts
+#                 })
+
+#             # Generate box plot
+#             fig, ax = plt.subplots()
+#             ax.boxplot([data['scores'] for data in subject_scores.values()], labels=[data['subject_name'] for data in subject_scores.values()])
+#             ax.set_xlabel('Subjects')
+#             ax.set_ylabel('Scores')
+#             ax.set_title('Student Report')
+
+#             # Serialize chart to base64-encoded image
+#             img_buffer = io.BytesIO()
+#             plt.savefig(img_buffer, format='png')
+#             img_buffer.seek(0)
+#             img_str = base64.b64encode(img_buffer.getvalue()).decode()
+#             plt.close()
+
+#             return jsonify({
+#                 "statistics": subject_statistics,
+#                 "chart": img_str
+#             })
+#         except Error as e:
+#             print("Error executing SQL query:", e)
+#             return jsonify({"error": "Failed to get student report"}), 500
+#         finally:
+#             if connection:
+#                 cursor.close()
+#                 connection.close()
+#     return jsonify({"error": "Failed to connect to database"}), 500
+
 @app.route('/api/subject_report/<subject_id>', methods=['GET'])
 def get_subject_report(subject_id):
     connection = connect_to_db()
@@ -342,8 +420,18 @@ def select_option():
     cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
     cv2.setWindowProperty("Frame", cv2.WND_PROP_TOPMOST, 1)
 
-    # Set the window position (x, y)
-    cv2.moveWindow("Frame", 100, 100)
+    # Get the screen resolution
+    screen_width = 1500 
+    screen_height = 768
+
+    # Calculate the position for the window
+    window_width = 640  # Width of the frame window
+    window_height = 480  # Height of the frame window
+    x_pos = int(screen_width - window_width )  # 50 pixels padding from the right edge
+    y_pos = int(screen_height - window_height )  # 50 pixels padding from the bottom edge
+
+    # Set the window position
+    cv2.moveWindow("Frame", x_pos, y_pos)
     
     last_quadrant = None
     start_time = None
