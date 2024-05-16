@@ -440,6 +440,8 @@ def select_option():
         ret, frame = cap.read()
         if not ret:
             continue
+        
+        
 
         frame = cv2.flip(frame, 1)
         height, width, _ = frame.shape

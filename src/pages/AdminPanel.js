@@ -187,38 +187,60 @@ function AdminPanel() {
   };
   
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-cover bg-center bg-fixed min-h-screen" style={{backgroundImage: "url('/quiz.jpg')"}}>
          <Header /> 
       {loggedIn ? (
-        <div className="max-w-4xl mx-auto py-8 flex">
+        <div className="max-w-6xl mx-auto py-8 flex bg-white bg-opacity-95">
         {/* Left part */}
-        <div className="w-1/5 flex flex-col justify-center items-center">
-          <h1 className="text-3xl text-center font-semibold mb-8">Welcome Admin!</h1>
+        <div className="w-1/5 flex flex-col justify-center items-center border-r border-gray-900">
+          <h1 className="text-3xl text-center font-extrabold mb-8">Welcome Admin!</h1>
           <div className="text-center">
             {/* <h2 className="text-xl mb-4">Options</h2> */}
             <div className="flex flex-wrap justify-center">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('SubjectReport')}>Subject Report</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('StudentReport')}>Student Report</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddQuestion')}>Add Question</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('DeleteQuestion')}>Delete Question</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddStudent')}>Add Student</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('DeleteStudent')}>Delete Student</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddClass')}>Add Class</button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2" onClick={() => handleOptionClick('AddSubject')}>Add Subject</button>
-              <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md block mx-auto mt-4" onClick={() => setLoggedIn(false)}>Logout</button>
+            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('SubjectReport')}>Subject Report</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('StudentReport')}>Student Report</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('AddQuestion')}>Add Question</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold" onClick={() => handleOptionClick('DeleteQuestion')}>Delete Question</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('AddStudent')}>Add Student</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('DeleteStudent')}>Delete Student</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('AddClass')}>Add Class</button>
+<button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 mb-2 w-40 h-12 font-semibold text-lg" onClick={() => handleOptionClick('AddSubject')}>Add Subject</button>
+<button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md block mx-auto mt-4 w-40 h-12 font-semibold text-lg" onClick={() => setLoggedIn(false)}>Logout</button>
+
             </div>
           </div>
         </div>
         <div className="w-4/5 px-4">
           {displayOption === 'AddStudent' && (
             <div className="mt-8">
-              <h2 className="text-xl mb-4">Add Student</h2>
+              <h2 className="text-3xl mb-4 font-bold ">Add Student</h2>
               <div className="flex flex-wrap justify-center">
+                <div>
+                <h2 className="text-xl mb-4 font-semibold ">Student Name</h2>
                 <input type="text" placeholder="Student Name" value={studentName} onChange={(e) => setStudentName(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <br />
+                <br />
+                <div>
+                <h2 className="text-xl mb-4 font-semibold ">Student ID</h2>
                 <input type="text" placeholder="Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <br />
+                <br />
+                <div>
+                <h2 className="text-xl mb-4 font-semibold ">Student Class</h2>
                 <input type="number" placeholder="Class" value={grade} onChange={(e) => setGrade(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <br />
+                <br />
+                <div>
+                <h2 className="text-xl mb-4 font-semibold ">Student DoB</h2>
                 <input type="date" value={dob} onChange={(e) => setDob(new Date(e.target.value))} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-                <button onClick={handleAddStudent} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Student</button>
+                </div>
+                </div>
+                <div className="flex flex-wrap justify-center mt-8" >
+                <button onClick={handleAddStudent} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Add Student</button>
+              
               </div>
             </div>
           )}
@@ -227,58 +249,108 @@ function AdminPanel() {
           {/* Other options */}
 {displayOption === 'DeleteStudent' && (
   <div className="mt-8">
-    <h2 className="text-xl mb-4">Delete Student</h2>
+    <h2 className="text-3xl mb-4 font-bold">Delete Student</h2>
     <div className="flex flex-wrap justify-center">
+      <div>
+    <h2 className="text-xl mb-4 font-semibold ">Student ID</h2>
       <input type="text" placeholder="Student ID" value={deletedStudentId} onChange={(e) => setDeletedStudentId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <button onClick={handleDeleteStudent} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md mb-2">Delete Student</button>
+      </div>
+      <br />
+      <br />
+      </div>
+      <div className="flex flex-wrap justify-center mt-8">
+      <button onClick={handleDeleteStudent} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Delete Student</button>
     </div>
   </div>
 )}
 {displayOption === 'AddQuestion' && (
   <div className="mt-8">
-    <h2 className="text-xl mb-4">Add Question</h2>
+    
+    <h2 className="text-3xl mb-4 font-bold">Add Question</h2>
     <div className="flex flex-wrap justify-center">
+    <div>
+    <h2 className="text-xl mb-4 font-semibold ">Question</h2>
       <input type="text" placeholder="Question Text" value={questionText} onChange={(e) => setQuestionText(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+      </div>
+      <div>
+      <h2 className="text-xl mb-4 font-semibold ">Option A</h2>
       <input type="text" placeholder="Option A" value={option_a} onChange={(e) => setOption_a(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+      </div>
+      <div>
+      <h2 className="text-xl mb-4 font-semibold ">Option B</h2>
       <input type="text" placeholder="Option B" value={option_b} onChange={(e) => setOption_b(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+      </div>
+      <div>
+      <h2 className="text-xl mb-4 font-semibold ">Option C</h2>
       <input type="text" placeholder="Option C" value={option_c} onChange={(e) => setOption_c(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+      </div>
+      <div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Option D</h2>
       <input type="text" placeholder="Option D" value={option_d} onChange={(e) => setOption_d(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <select value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2">
+      </div>
+      <div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Correct Answer</h2>
+      <select value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2 ">
   <option value="">Select Correct Answer</option>
-  <option value="a">A</option>
-  <option value="b">B</option>
-  <option value="c">C</option>
-  <option value="d">D</option>
+  <option value="a">Option A</option>
+  <option value="b">Option B</option>
+  <option value="c">Option C</option>
+  <option value="d">Option D</option>
 </select>
+</div>
 
 {/* Level dropdown */}
-<select value={level} onChange={(e) => setLevel(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2">
+<div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Level</h2>
+<select value={level} onChange={(e) => setLevel(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2 w-48">
   <option value="">Select Level</option>
   <option value="1">Level 1</option>
   <option value="2">Level 2</option>
   <option value="3">Level 3</option>
   <option value="4">Level 4</option>
 </select>
+</div>
+<div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Subject ID</h2>
       <input type="text" placeholder="Subject ID" value={subject_id} onChange={(e) => setSubject_Id(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <button onClick={handleAddQuestion} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Question</button>
+      </div>
+      </div>
+      <br />
+      <br />
+      <div className="flex flex-wrap justify-center mt-8">
+      <button onClick={handleAddQuestion} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Add Question</button>
+    
     </div>
   </div>
 )}
 {displayOption === 'DeleteQuestion' && (
   <div className="mt-8">
-    <h2 className="text-xl mb-4">Delete Question</h2>
+    <h2 className="text-3xl mb-4 font-bold">Delete Question</h2>
     <div className="flex flex-wrap justify-center">
+      <div>
+    <h2 className="text-xl mb-4 mt-4 font-semibold ">Question ID</h2>
       <input type="text" placeholder="Question ID" value={deletedQuestionId} onChange={(e) => setDeletedQuestionId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <button onClick={handleDeleteQuestion} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md mb-2">Delete Question</button>
+      </div>
+      <br />
+      <br />
+      </div>
+      <div className="flex flex-wrap justify-center mt-8">
+      <button onClick={handleDeleteQuestion} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Delete Question</button>
+    
     </div>
   </div>
 )}
 {displayOption === 'StudentReport' && (
   <div className="mt-8">
-    <h2 className="text-xl mb-4">Student Report</h2>
+    <h2 className="text-3xl mb-4 font-bold">Student Report</h2>
     <div className="flex flex-wrap justify-center">
+      <div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Student ID</h2>
       <input type="text" placeholder="Enter Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <button onClick={() => {fetchStudentDetails(); fetchStudentReport();}} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-2">Generate Student Report</button>
+      </div>
+      </div>
+      <div className="flex flex-wrap justify-center mt-8">
+      <button onClick={() => {fetchStudentDetails(); fetchStudentReport();}} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Generate Student Report</button>
     </div>
     {studentReport && (
       <div className="text-center">
@@ -305,10 +377,15 @@ function AdminPanel() {
 )}
 {displayOption === 'SubjectReport' && (
   <div className="mt-8">
-    <h2 className="text-xl mb-4">Subject Report</h2>
+    <h2 className="text-3xl mb-4 font-bold">Subject Report</h2>
     <div className="flex flex-wrap justify-center">
+    <div>
+      <h2 className="text-xl mb-4 mt-4 font-semibold ">Subject ID</h2>
       <input type="text" placeholder="Enter Subject ID" value={subjectId} onChange={(e) => setSubjectId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-      <button onClick={fetchSubjectReport} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-2">Generate Subject Report</button>
+      </div>
+      </div>
+      <div className="flex flex-wrap justify-center mt-8">
+      <button onClick={fetchSubjectReport} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Generate Subject Report</button>
     </div>
     {subjectReport && (
       <div className="text-center">
@@ -325,23 +402,42 @@ function AdminPanel() {
 )}
 {displayOption === 'AddClass' && (
             <div className="mt-8">
-              <h2 className="text-xl mb-4">Add Class</h2>
+              <h2 className="text-3xl mb-4 font-bold">Add Class</h2>
               <div className="flex flex-wrap justify-center">
+                <div>
+                <h2 className="text-xl mb-4 mt-4 font-semibold ">Class ID</h2>
                 <input type="text" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <div>
+                <h2 className="text-xl mb-4 mt-4 font-semibold ">Class Name</h2>
                 <input type="text" placeholder="Class Name" value={className} onChange={(e) => setClassName(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-                <button onClick={handleAddClass} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Class</button>
+                </div>
+                </div>
+                <div className="flex flex-wrap justify-center mt-8">
+                <button onClick={handleAddClass} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Add Class</button>
               </div>
             </div>
           )}
           {/* Add Subject */}
           {displayOption === 'AddSubject' && (
             <div className="mt-8">
-              <h2 className="text-xl mb-4">Add Subject</h2>
+              <h2 className="text-3xl mb-4 font-bold">Add Subject</h2>
               <div className="flex flex-wrap justify-center">
+                <div>
+                <h2 className="text-xl mb-4 mt-4 font-semibold ">Subject ID</h2>
                 <input type="text" placeholder="Subject ID" value={subjectId} onChange={(e) => setSubjectId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <div>
+                <h2 className="text-xl mb-4 mt-4 font-semibold ">Subject Name</h2>
                 <input type="text" placeholder="Subject Name" value={subjectName} onChange={(e) => setSubjectName(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
+                </div>
+                <div>
+                <h2 className="text-xl mb-4 mt-4 font-semibold ">Class ID</h2>
                 <input type="text" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} className="bg-gray-200 rounded-md p-2 mr-2 mb-2" />
-                <button onClick={handleAddSubject} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2">Add Subject</button>
+                </div>
+                </div>
+                <div className="flex flex-wrap justify-center mt-8">
+                <button onClick={handleAddSubject} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mb-2 font-semibold text-lg">Add Subject</button>
               </div>
             </div>
           )}
@@ -350,11 +446,11 @@ function AdminPanel() {
 
         </div>
       ) : (
-        <div className="max-w-sm mx-auto mt-20 bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl text-center font-semibold mb-4">Admin Login</h1>
+        <div className="max-w-sm mx-auto mt-20 bg-white bg-opacity-95 rounded-lg shadow-lg p-8">
+          <h1 className="text-3xl text-center font-bold mb-4">Admin Login</h1>
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full bg-gray-200 rounded-md p-2 mb-4" />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-200 rounded-md p-2 mb-4" />
-          <button onClick={handleLogin} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Login</button>
+          <button onClick={handleLogin} className="bg-gradient-to-r from-purple-400 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white py-2 px-4 rounded-md mb-2 block font-semibold text-lg">Login</button>
         </div>
       )}
     </div>

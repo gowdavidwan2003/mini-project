@@ -56,29 +56,29 @@ function Quiz() {
 
   return (
     <div>
+    <div className="bg-cover bg-center bg-fixed min-h-screen" style={{backgroundImage: "url('/quiz.jpg')"}}>
       <Header />
-    
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto flex flex-col items-center py-12 text-black bg-white bg-opacity-95 rounded-lg">
       
-      <h2 className="text-3xl font-semibold mb-6 text-center">Welcome to Quiz Wizards!</h2>
-      <form onSubmit={handleSubmit} className="text-center">
-        <label htmlFor="studentId" className="block mb-4">Enter Student ID:</label>
+      <h2 className="text-3xl font-bold mb-6 text-center">Welcome to Quiz Wizards!</h2>
+      <form onSubmit={handleSubmit} className="text-center text-lg">
+        <label htmlFor="studentId" className="block mb-4 text-lg font-semibold">Enter Student ID:</label>
         <input
           type="number"
           id="studentId"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}
-          className="border rounded-md py-2 px-4 mb-4"
+          className="border rounded-md py-2 px-4 mb-4 text-lg"
         />
-        <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-4">
+        <button type="submit" className="bg-gradient-to-r from-purple-400 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white py-2 px-4 rounded-md mb-2 block text-lg font-semibold">
           Fetch
         </button>
-        <label htmlFor="subject" className="block mb-2">Select Subject:</label>
+        <label htmlFor="subject" className="block mb-2 text-lg font-semibold">Select Subject:</label>
         <select
           id="subject"
           value={selectedSubject}
           onChange={handleSubjectChange}
-          className="border rounded-md py-2 px-4 mb-4"
+          className="border rounded-md py-2 px-4 mb-4 text-lg"
         >
           <option value="">Select...</option>
           {subjects.map((subject) => (
@@ -87,12 +87,12 @@ function Quiz() {
             </option>
           ))}
         </select>
-        <label htmlFor="levelSelect" className="block mb-2">Select Level:</label>
+        <label htmlFor="levelSelect" className="block mb-2 text-lg font-semibold">Select Level:</label>
         <select
           id="levelSelect"
           value={selectedLevel}
           onChange={handleLevelChange}
-          className="border rounded-md py-2 px-4 mb-4"
+          className="border rounded-md py-2 px-4 mb-4 text-lg"
         >
           <option value="1">Level 1</option>
           <option value="2">Level 2</option>
@@ -106,10 +106,11 @@ function Quiz() {
           type="button"
           onClick={handleProceedToQuiz}
           disabled={!selectedSubject}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+          className="bg-gradient-to-r from-purple-400 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white py-2 px-4 rounded-md mb-2 block font-semibold">
           Proceed to Quiz
         </button>
       </form>
+    </div>
     </div>
     </div>
   );

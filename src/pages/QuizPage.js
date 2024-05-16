@@ -25,13 +25,6 @@ function QuizPage() {
     }
   }, [subjectId, level]);
 
-  // useEffect(() => {
-  //   // Automatically click the "Open Camera" button when a new question is displayed
-  //   const button = document.getElementById('openCameraButton');
-  //   if (button) {
-  //     button.click();
-  //   }
-  // }, [currentQuestionIndex]);
 
   const handleOptionSelect = async (optionIndex) => {
     const response = await axios.post('http://localhost:5000/api/select_option', {
@@ -88,45 +81,50 @@ function QuizPage() {
 
   return (
     <div>
+      <div className="bg-cover bg-center bg-fixed min-h-screen" style={{backgroundImage: "url('/quiz.jpg')"}}>
       <Header />
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 font-semibold bg-white bg-opacity-90">
+      {/* <h2 className="text-3xl font-semibold mb-6 text-center">
+        <span className="text-3xl font-bold mb-6 text-center">
+          Quiz Page
+          </span>
+          </h2> */}
       
-      <h2 className="text-3xl font-semibold mb-6 text-center">Quiz Page</h2>
       <div className="flex justify-center">
         <div className="w-full md:w-2/3 lg:w-1/2">
-        <p className="text-lg mb-4">Score: {score}</p>
-          <div className="bg-white shadow-md rounded-md p-6">
-            <div>
-              
-            </div>
-            {quizCompleted ? (
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Quiz Completed!</h3>
-                <p className="text-lg mb-4">Your Score: {score}</p>
-              </div>
-            ) : (
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Question {currentQuestionIndex + 1}</h3>
-                <p className="text-lg mb-4">{questions[currentQuestionIndex]?.question}</p>
-                <ul className="mb-4">
-                  {questions[currentQuestionIndex]?.options.map((option, index) => (
-                    <li key={index}>
-                     
-                     Option {String.fromCharCode(65 + index)}.   {option}
-
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+        <span className="text-2xl mb-4 bg-white bg-opacity-100 font-bold">Score: {score}</span>
+       <div className="bg-white bg-opacity-100 shadow-md rounded-md p-6">
+  {quizCompleted ? (
+    <div>
+      <h3 className="text-3xl font-bold mb-2">Quiz Completed!</h3>
+      <p className="text-2xl mb-4">Your Score: {score}</p>
+    </div>
+  ) : (
+    <div className="flex flex-col">
+      <div className="question mb-6 w-3/10">
+        {/* <p className="text-lg mb-2">Question {currentQuestionIndex + 1}</p> */}
+        <h3 className="text-2xl font-bold mb-4">{questions[currentQuestionIndex]?.question}</h3>
+      </div>
+      <div className="w-7/10 grid grid-cols-2 grid-rows-2 gap-4">
+        {questions[currentQuestionIndex]?.options.map((option, index) => (
+          <div key={index} className={`option-wrapper border-2 border-blue-500 p-2 ${index < 2 ? 'row-start-1' : 'row-start-2'} ${index % 2 === 0 ? 'col-start-1' : 'col-start-2'}`}>
+            <p className="option-text text-center text-2xl font-extrabold">{option}</p>
           </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+
           <button id="openCameraButton"
                onClick={() => handleOptionSelect(0)}
-               className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md ${selectedOption === 0 ? 'bg-blue-600' : ''}`}
-             >Open Camera
+               className={`bg-gradient-to-r from-purple-400 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white py-2 px-4 rounded-md mb-2 block text-xl font-semibold" ${selectedOption === 0 ? 'bg-blue-600' : ''}`}
+             >Ready
               </button>
         </div>
       </div>
+    </div>
     </div>
     </div>
   );
