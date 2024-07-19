@@ -83,14 +83,14 @@ function QuizPage() {
     <div>
       <div className="bg-cover bg-center bg-fixed min-h-screen" style={{backgroundImage: "url('/quiz.jpg')"}}>
       <Header />
-    <div className="container mx-auto px-4 py-8 font-semibold bg-white bg-opacity-90">
+    <div className="container mx-auto px-4 py-8 font-semibold bg-white bg-opacity-95">
       {/* <h2 className="text-3xl font-semibold mb-6 text-center">
         <span className="text-3xl font-bold mb-6 text-center">
           Quiz Page
           </span>
           </h2> */}
       
-      <div className="flex justify-center">
+      <div className="flex ml-24">
         <div className="w-full md:w-2/3 lg:w-1/2">
         <span className="text-2xl mb-4 bg-white bg-opacity-100 font-bold">Score: {score}</span>
        <div className="bg-white bg-opacity-100 shadow-md rounded-md p-6">

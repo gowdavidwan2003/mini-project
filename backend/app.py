@@ -14,6 +14,7 @@ import numpy as np
 import seaborn as sns
 
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -283,6 +284,8 @@ def get_student_report(student_id):
                 "date": row[3],
                 "test_id": row[4]
             } for row in cursor.fetchall()]
+
+            
             return jsonify(report)
         except Error as e:
             print("Error executing SQL query:", e)
@@ -293,80 +296,7 @@ def get_student_report(student_id):
                 connection.close()
     return jsonify({"error": "Failed to connect to database"}), 500
 
-# @app.route('/api/student_report/<student_id>', methods=['GET'])
-# def get_student_report(student_id):
-#     connection = connect_to_db()
-#     if connection:
-#         try:
-#             cursor = connection.cursor()
-#             # Query to get student report from the database
-#             query = """
-#                 SELECT t1.subject_id, s.subject_name, t1.score 
-#                 FROM test t1 
-#                 JOIN subject s ON t1.subject_id = s.subject_id 
-#                 WHERE student_id = %s
-#             """
-#             cursor.execute(query, (student_id,))
-#             connection.commit()
 
-#             # Fetching student report
-#             report = [{
-#                 "subject_id": row[0],
-#                 "subject_name": row[1],
-#                 "score": row[2]
-#             } for row in cursor.fetchall()]
-
-#             # Group scores by subject
-#             subject_scores = {}
-#             for entry in report:
-#                 if entry['subject_id'] not in subject_scores:
-#                     subject_scores[entry['subject_id']] = {'subject_name': entry['subject_name'], 'scores': []}
-#                 subject_scores[entry['subject_id']]['scores'].append(entry['score'])
-
-#             # Calculate statistics for each subject
-#             subject_statistics = []
-#             for subject_id, data in subject_scores.items():
-#                 scores = data['scores']
-#                 max_score = np.max(scores)
-#                 min_score = np.min(scores)
-#                 avg_score = np.mean(scores)
-#                 median_score = np.median(scores)
-#                 num_attempts = len(scores)
-#                 subject_statistics.append({
-#                     'subject_name': data['subject_name'],
-#                     'max_score': max_score,
-#                     'min_score': min_score,
-#                     'avg_score': avg_score,
-#                     'median_score': median_score,
-#                     'num_attempts': num_attempts
-#                 })
-
-#             # Generate box plot
-#             fig, ax = plt.subplots()
-#             ax.boxplot([data['scores'] for data in subject_scores.values()], labels=[data['subject_name'] for data in subject_scores.values()])
-#             ax.set_xlabel('Subjects')
-#             ax.set_ylabel('Scores')
-#             ax.set_title('Student Report')
-
-#             # Serialize chart to base64-encoded image
-#             img_buffer = io.BytesIO()
-#             plt.savefig(img_buffer, format='png')
-#             img_buffer.seek(0)
-#             img_str = base64.b64encode(img_buffer.getvalue()).decode()
-#             plt.close()
-
-#             return jsonify({
-#                 "statistics": subject_statistics,
-#                 "chart": img_str
-#             })
-#         except Error as e:
-#             print("Error executing SQL query:", e)
-#             return jsonify({"error": "Failed to get student report"}), 500
-#         finally:
-#             if connection:
-#                 cursor.close()
-#                 connection.close()
-#     return jsonify({"error": "Failed to connect to database"}), 500
 
 @app.route('/api/subject_report/<subject_id>', methods=['GET'])
 def get_subject_report(subject_id):
@@ -396,7 +326,7 @@ def get_subject_report(subject_id):
                     "num_students": num_students,
                     "sid_count" :sid
                 }
-
+                
                 return jsonify(subject_report)
             else:
                 return jsonify({"error": "No test scores available for this subject"}), 404
@@ -536,6 +466,128 @@ def add_subject():
                 cursor.close()
                 connection.close()
     return jsonify({"error": "Failed to connect to database"}), 500
+
+
+
+@app.route('/api/colorshape', methods=['POST'])
+def colorshape():
+    data = request.json
+    color1 = data.get('selectedcolor')
+    shape = data.get('selectedshape')
+    
+
+    mp_hands = mp.solutions.hands
+    hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1, min_detection_confidence=0.5)  # Changed max_num_hands to 2
+
+    mp_drawing = mp.solutions.drawing_utils
+
+    # Create a white background.
+    background = np.ones((720, 1280, 3), dtype=np.uint8) * 255
+
+    shapes = {
+    'Rectangle': [(300, 200), (1000, 500)],
+    'Triangle': [(600, 200), (300, 500), (900, 500)],
+    'Circle': [(650, 350), 150]
+    }
+
+    colors = {
+    'green': (0, 255, 0),
+    'blue': (255, 0, 0),
+    'orange':(0, 165, 255),
+    'yellow': (0, 255, 255),
+    'pink':(203, 192, 255),
+    'purple':(128, 0, 128),
+    'red': (0, 0, 255)
+    }
+
+    color = colors[color1]
+
+    mask = np.zeros((720, 1280), dtype=np.uint8)
+    if shape == 'rectangle':
+        cv2.rectangle(background, shapes['Rectangle'][0], shapes['Rectangle'][1], (0,0,0), 2)
+        cv2.rectangle(mask, shapes['Rectangle'][0], shapes['Rectangle'][1], 255, -1)
+    elif shape == 'triangle':
+        cv2.polylines(background, [np.array(shapes['Triangle'])], isClosed=True, color=(0,0,0), thickness=2)
+        cv2.fillPoly(mask, [np.array(shapes['Triangle'])], 255)
+    elif shape == 'circle':
+        cv2.circle(background, shapes['Circle'][0], shapes['Circle'][1], (0,0,0), 2)
+        cv2.circle(mask, shapes['Circle'][0], shapes['Circle'][1], 255, -1)
+
+    # Create an exit button.
+    cv2.rectangle(background, (1080, 620), (1230, 670), (0, 0, 255), -1)  # Moved to bottom right and made larger
+    cv2.putText(background, 'EXIT', (1105, 655), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+
+    # Start capturing video from the webcam.
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+    exit_time = None
+
+    # Create a window in OpenCV and make it stay on top.
+    cv2.namedWindow('Interactive Coloring Book', cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty('Interactive Coloring Book', cv2.WND_PROP_TOPMOST, 1)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Flip the image horizontally for a selfie-view display.
+        frame = cv2.flip(frame, 1)
+
+        # Convert the BGR image to RGB.
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Process the frame and get hand landmarks.
+        results = hands.process(rgb_frame)
+
+        # Create a temporary copy of the background.
+        temp_background = background.copy()
+
+        # Add instruction to the frame.
+        cv2.putText(temp_background, f'Color the {shape}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+
+        # Draw the hand landmarks on the frame.
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                # Get the coordinates of the wrist.
+                x = int(hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].x * frame.shape[1])
+                y = int(hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y * frame.shape[0])
+
+                # Draw a circle at the wrist on the temporary background.
+                cv2.circle(temp_background, (x, y), 10, colors[color], -1)
+
+                # If the wrist is inside the shape, draw on the mask.
+                if 0 <= x < mask.shape[1] and 0 <= y < mask.shape[0]:  # Check if (x, y) is within the dimensions of the mask
+                    if mask[y, x] == 255:
+                        cv2.circle(background, (x, y), 20, colors[color], -1)  # Increased radius to 20
+
+                # If the wrist is inside the exit button, start the timer.
+                if 1080 < x < 1230 and 620 < y < 670:  # Updated coordinates for the larger exit button
+                    if exit_time is None:
+                        exit_time = time.time()
+                    elif time.time() - exit_time > 2:
+                        cap.release()
+                        cv2.destroyAllWindows()
+                        break
+                else:
+                    exit_time = None
+
+        # Display the temporary background.
+        cv2.imshow('Interactive Coloring Book', temp_background)
+
+        # Break the loop if 'q' is pressed.
+        if cv2.waitKey(5) & 0xFF == ord('q'):
+            break
+
+        return None
+
+    # Release the webcam and close the windows.
+    cap.release()
+    cv2.destroyAllWindows()
+
+
 
 
 if __name__ == '__main__':

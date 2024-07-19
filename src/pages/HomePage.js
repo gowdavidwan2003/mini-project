@@ -19,6 +19,7 @@ function Home() {
         <li>Subject-specific quizzes</li>
         <li>Score tracking and reporting</li>
       </ul>
+      
       <p className="text-xl mb-4 font-semibold">Get started now by taking a quiz!</p>
       <Link to="/quiz" className="bg-gradient-to-r from-purple-400 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white py-2 px-4 rounded-md mb-2 block font-bold">Get Started</Link>
   

@@ -6,6 +6,7 @@ import QuizPage from './pages/QuizPage';
 import AdminPanel from './pages/AdminPanel'
 import InteractiveBalls from './pages/InteractiveBalls';
 import HomePage from './pages/HomePage';
+import ColorShapePage from './pages/ColorShapePage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/quiz/:studentId/:subjectId/:level" element={<QuizPage />} />
         <Route path="/adminpanel" element={<AdminPanel />} />
+        <Route path="/colorshapepage" element={<ColorShapePage />} />
         <Route path="/InteractiveBalls" element={<InteractiveBalls />} />
       </Routes>
     </Router>

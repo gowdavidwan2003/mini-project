@@ -355,9 +355,9 @@ function AdminPanel() {
     {studentReport && (
       <div className="text-center">
         <h3 className="text-lg mb-2">Student Information</h3>
-        <p>Student Name: {studentDetails.full_name}</p>
-        <p>Date of Birth: {studentDetails.dob}</p>
-        <h3 className="text-lg mt-4 mb-2">Test Results</h3>
+        {/* <p>Student Name: {studentDetails.full_name}</p>
+        <p>Date of Birth: {studentDetails.dob}</p>*/}
+    <h3 className="text-lg mt-4 mb-2">Test Results</h3> 
         {Array.isArray(studentReport) && studentReport.length > 0 ? (
           <ul>
             {studentReport.map((result, index) => (
@@ -442,8 +442,6 @@ function AdminPanel() {
             </div>
           )}
 </div>
-
-
         </div>
       ) : (
         <div className="max-w-sm mx-auto mt-20 bg-white bg-opacity-95 rounded-lg shadow-lg p-8">
